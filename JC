@@ -1,11 +1,13 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/bin/bash
 
+# 检查 Python 是否已安装
 if ! command -v python &> /dev/null; then
     echo "Python 未安装，正在安装..."
-    # 安装 Python
-    pkg install python -y
+    # 更新包列表并安装 Python，自动接受所有提示
+    yes | pkg update
+    yes | pkg install python -y
     if [ $? -ne 0 ]; then
-        echo "Python 安装失败"
+        echo "Python 安装失败，请检查网络或权限。"
         exit 1
     fi
     echo "Python 安装完成。"
@@ -13,8 +15,35 @@ else
     echo "Python 已安装。"
 fi
 
-# 确保脚本具有可执行权限
-chmod 777 ue
+# 检查 pip 是否已安装
+if ! command -v pip &> /dev/null; then
+    echo "pip 未安装，正在安装..."
+    # 安装 pip
+    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    python get-pip.py
+    if [ $? -ne 0 ]; then
+        echo "pip 安装失败，请检查网络或权限。"
+        exit 1
+    fi
+    echo "pip 安装完成。"
+else
+    echo "pip 已安装。"
+fi
 
-# 运行 Python 脚本
-python 0
+# 检查 requests 库是否已安装
+if ! python -c "import requests" &> /dev/null; then
+    echo "requests 库未安装，正在安装..."
+    # 安装 requests 库
+    yes | pip install requests
+    if [ $? -ne 0 ]; then
+        echo "requests 库安装失败，请检查网络或权限。"
+        exit 1
+    fi
+    echo "requests 库安装完成。"
+else
+    echo "requests 库已安装。"
+fi
+
+# 设置文件权限并运行 Python 脚本
+chmod 777 ue
+Python0
