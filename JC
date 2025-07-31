@@ -46,4 +46,4 @@ fi
 
 # 设置文件权限并运行 Python 脚本
 chmod 777 ue
-Python0
+Python 0
